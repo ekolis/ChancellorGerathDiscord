@@ -1,7 +1,9 @@
 ﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ChancellorGerath
@@ -28,6 +30,9 @@ namespace ChancellorGerath
 			Console.SetError(stderr);
 
 			client = new DiscordSocketClient();
+
+			var ch = new CommandHandler(client, new CommandService());
+			await ch.InstallCommandsAsync();
 
 			client.Log += Log;
 
