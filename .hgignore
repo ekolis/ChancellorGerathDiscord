@@ -1,0 +1,6 @@
+syntax: glob
+.vs
+*.suo
+bin
+obj
+Token.txt
