@@ -11,7 +11,7 @@ namespace ChancellorGerath
 		/// <summary>
 		/// Our friendly neighborhood random number generator.
 		/// </summary>
-		private static Random Random { get; } = new Random();
+		public static Random Random { get; } = new Random();
 
 		/// <summary>
 		/// Picks a random item from a list.
@@ -22,6 +22,26 @@ namespace ChancellorGerath
 		public static T PickRandom<T>(this IEnumerable<T> list)
 		{
 			return list.ElementAt(Random.Next(list.Count()));
+		}
+
+		public static T PickWeighted<T>(this IDictionary<T, int> dict, Random r)
+		{
+			if (!dict.Any())
+				throw new ArgumentException("Cannot pick a weighted item from an empty dictionary.");
+
+			var total = dict.Sum(kvp => kvp.Value);
+			var diceroll = r.Next(total);
+
+			// TODO - this isn't really PRNG safe as dictionaries enumerate in arbitrary order
+			var count = 0;
+			foreach (var kvp in dict)
+			{
+				count += kvp.Value;
+				if (diceroll < count)
+					return kvp.Key;
+			}
+
+			throw new InvalidOperationException($"Failed to pick a weighted item from a dictionary containing {dict.Count} items totaling {total} weight with a dice roll of {diceroll}. Current count is {count}.");
 		}
 	}
 }

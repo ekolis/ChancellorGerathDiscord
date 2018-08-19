@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using ChancellorGerath.Conversation;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace ChancellorGerath
 		{
 			// Hook the MessageReceived event into our command handler
 			_client.MessageReceived += HandleCommandAsync;
+
+			// Hook up our chitchat listener
+			_client.MessageReceived += ConversationModule.ListenAsync;
 
 			// Here we discover all of the command modules in the entry 
 			// assembly and load them. Starting from Discord.NET 2.0, a
