@@ -58,7 +58,6 @@ namespace ChancellorGerath.Conversation
 			return ReplyAsync(gen.WriteSentence(preferredLength, maxLength).Text);
 		}
 
-		// !jabber Bob -> generates a random quote based on Bob's chat history.
 		// !jabber -> generates a random quote based on everyone's chat history.
 		[Command("jabber")]
 		[Summary("Mimics everyone's speech patterns.")]
@@ -87,6 +86,7 @@ namespace ChancellorGerath.Conversation
 				Directory.CreateDirectory("Conversation");
 			if (!File.Exists($"Conversation/Markov.{who}.txt"))
 				File.Create($"Conversation/Markov.{who}.txt");
+			// TODO - don't write a sentence if it's already there?
 			using (var s = await GetWriteStreamAsync($"Conversation/Markov.{who}.txt"))
 			{
 				using (var sw = new StreamWriter(s))
@@ -95,6 +95,7 @@ namespace ChancellorGerath.Conversation
 					sw.Close();
 				}
 			}
+			// TODO - don't write a sentence if it's already there?
 			using (var s = await GetWriteStreamAsync($"Conversation/Markov.txt"))
 			{
 				using (var sw = new StreamWriter(s))
@@ -109,6 +110,7 @@ namespace ChancellorGerath.Conversation
 		// https://stackoverflow.com/questions/1406808/wait-for-file-to-be-freed-by-process
 		private static async Task<FileStream> GetWriteStreamAsync(string path)
 		{
+			// TODO - wrap this code in Task.Run to make it truly async
 			while (true)
 			{
 				try
