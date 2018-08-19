@@ -54,7 +54,7 @@ namespace ChancellorGerath
 		public static string GetNicknameOrUsername(this SocketUser u)
 		{
 			if (u is SocketGuildUser gu)
-				return gu.Nickname;
+				return gu.Nickname ?? u.Username;
 			return u.Username;
 		}
 	}
