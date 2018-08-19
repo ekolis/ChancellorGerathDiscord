@@ -1,4 +1,5 @@
 ﻿using Discord.Commands;
+using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,19 @@ namespace ChancellorGerath
 			}
 
 			throw new InvalidOperationException($"Failed to pick a weighted item from a dictionary containing {dict.Count} items totaling {total} weight with a dice roll of {diceroll}. Current count is {count}.");
+		}
+
+		/// <summary>
+		/// If the user is a SocketGuildUser, get their nickname.
+		/// Otherwise just use their username.
+		/// </summary>
+		/// <param name="u"></param>
+		/// <returns></returns>
+		public static string GetNicknameOrUsername(this SocketUser u)
+		{
+			if (u is SocketGuildUser gu)
+				return gu.Nickname;
+			return u.Username;
 		}
 	}
 }

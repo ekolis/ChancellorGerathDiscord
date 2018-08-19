@@ -82,11 +82,11 @@ namespace ChancellorGerath.Conversation
 			if (arg.Content.StartsWith("!"))
 				return;
 
-			var who = arg.Author.Username;
+			var who = arg.Author.GetNicknameOrUsername();
 			if (!Generators.ContainsKey(who))
 				Generators.Add(who, new Generator(Extensions.Random));
 			Generators[who].ReadChain(arg.Content);
-			if (arg.Author.Username != "Chancellor Gerath")
+			if (who != "Chancellor Gerath")
 				EveryoneGenerator.ReadChain(arg.Content);
 			if (!Directory.Exists("Conversation"))
 				Directory.CreateDirectory("Conversation");
