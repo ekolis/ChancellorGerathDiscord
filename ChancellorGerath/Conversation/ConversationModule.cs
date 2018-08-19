@@ -22,18 +22,20 @@ namespace ChancellorGerath.Conversation
 		{
 			if (Directory.Exists("Conversation"))
 			{
+				Console.WriteLine($"Reading markov chains from {Path.GetFullPath("Conversation/Markov.txt")}");
 				if (File.Exists("Conversation/Markov.txt"))
 				{
 					foreach (var line in File.ReadAllLines("Conversation/Markov.txt"))
 						EveryoneGenerator.ReadChain(line);
 				}
-				var regex = new Regex(@"Conversation/Markov\.(.*)\.txt");
+				var regex = new Regex(@".*Markov\.(.*)\.txt");
 
 				foreach (var f in Directory.GetFiles("Conversation"))
 				{
-					var who = regex.Match(f).Groups[0].Captures.FirstOrDefault()?.Value;
+					var who = regex.Match(f).Groups[1].Captures.FirstOrDefault()?.Value;
 					if (who != null)
 					{
+						Console.WriteLine($"Reading markov chains from {Path.GetFullPath($"Conversation/Markov.{who}.txt")}");
 						Generators.Add(who, new Generator(Extensions.Random));
 						foreach (var line in File.ReadAllLines(f))
 							Generators[who].ReadChain(line);
@@ -65,7 +67,10 @@ namespace ChancellorGerath.Conversation
 		{
 			var preferredLength = Extensions.Random.Next(4, 12);
 			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
-			return ReplyAsync(EveryoneGenerator.WriteSentence(preferredLength, maxLength).Text);
+			if (EveryoneGenerator.Lexicon.Any())
+				return ReplyAsync(EveryoneGenerator.WriteSentence(preferredLength, maxLength).Text);
+			else
+				return ReplyAsync($"I don't have any conversation history!");
 		}
 
 		private static IDictionary<string, Generator> Generators { get; set; } = new Dictionary<string, Generator>();
@@ -81,27 +86,37 @@ namespace ChancellorGerath.Conversation
 			if (!Generators.ContainsKey(who))
 				Generators.Add(who, new Generator(Extensions.Random));
 			Generators[who].ReadChain(arg.Content);
-			EveryoneGenerator.ReadChain(arg.Content);
+			if (arg.Author.Username != "Chancellor Gerath")
+				EveryoneGenerator.ReadChain(arg.Content);
 			if (!Directory.Exists("Conversation"))
 				Directory.CreateDirectory("Conversation");
 			if (!File.Exists($"Conversation/Markov.{who}.txt"))
 				File.Create($"Conversation/Markov.{who}.txt");
-			// TODO - don't write a sentence if it's already there?
-			using (var s = await GetWriteStreamAsync($"Conversation/Markov.{who}.txt"))
+			var lines = File.ReadAllLines($"Conversation/Markov.{who}.txt");
+			if (!lines.Contains(arg.Content))
 			{
-				using (var sw = new StreamWriter(s))
+				using (var s = await GetWriteStreamAsync($"Conversation/Markov.{who}.txt"))
 				{
-					sw.WriteLine(arg.Content);
-					sw.Close();
+
+					using (var sw = new StreamWriter(s))
+					{
+						sw.WriteLine(arg.Content);
+						sw.Close();
+					}
 				}
 			}
-			// TODO - don't write a sentence if it's already there?
-			using (var s = await GetWriteStreamAsync($"Conversation/Markov.txt"))
+			if (who == "Chancellor Gerath")
+				return; // don't save bot messages to the main generator
+			lines = File.ReadAllLines($"Conversation/Markov.txt");
+			if (!lines.Contains(arg.Content))
 			{
-				using (var sw = new StreamWriter(s))
+				using (var s = await GetWriteStreamAsync($"Conversation/Markov.txt"))
 				{
-					sw.WriteLine(arg.Content);
-					sw.Close();
+					using (var sw = new StreamWriter(s))
+					{
+						sw.WriteLine(arg.Content);
+						sw.Close();
+					}
 				}
 			}
 			return;
@@ -110,22 +125,24 @@ namespace ChancellorGerath.Conversation
 		// https://stackoverflow.com/questions/1406808/wait-for-file-to-be-freed-by-process
 		private static async Task<FileStream> GetWriteStreamAsync(string path)
 		{
-			// TODO - wrap this code in Task.Run to make it truly async
-			while (true)
-			{
-				try
+			return await Task.Run(() =>
 				{
-					return new FileStream(path, FileMode.Append, FileAccess.Write);
-				}
-				catch (IOException e)
-				{
-					// access error
-					if (e.HResult != -2147024864)
-						throw;
+					while (true)
+					{
+						try
+						{
+							return new FileStream(path, FileMode.Append, FileAccess.Write);
+						}
+						catch (IOException e)
+						{
+							// access error
+							if (e.HResult != -2147024864)
+								throw;
 
-					Thread.Sleep(100); // wait for file to be available
-				}
-			}
+							Thread.Sleep(100); // wait for file to be available
+						}
+					}
+				});
 		}
 	}
 }
