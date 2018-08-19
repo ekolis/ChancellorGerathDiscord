@@ -1,0 +1,11 @@
+﻿stabs
+bludgeons
+zaps
+eviscerates
+decapitates
+blows up
+disintegrates
+flattens
+annihilates
+vaporizes
+poisons
