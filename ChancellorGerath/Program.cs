@@ -11,10 +11,22 @@ namespace ChancellorGerath
 		public static void Main(string[] args)
 		=> new Program().MainAsync().GetAwaiter().GetResult();
 
+		public static string Title => "Chancellor Gerath";
+
 		private DiscordSocketClient client;
 
 		public async Task MainAsync()
 		{
+			Console.Title = Title;
+			ConsoleWindow.Hide();
+
+			var stdout = new StreamWriter(File.OpenWrite("stdout.txt"));
+			stdout.AutoFlush = true;
+			var stderr = new StreamWriter(File.OpenWrite("stderr.txt"));
+			stderr.AutoFlush = true;
+			Console.SetOut(stdout);
+			Console.SetError(stderr);
+
 			client = new DiscordSocketClient();
 
 			client.Log += Log;
