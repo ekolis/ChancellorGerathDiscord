@@ -12,7 +12,7 @@ namespace ChancellorGerath.Verbs
 	/// <summary>
 	/// Allows the bot to say or do things in response to commands.
 	/// </summary>
-	public class VerbsModule : ModuleBase<SocketCommandContext>
+	public class VerbsModule : MyModuleBase<SocketCommandContext>
 	{
 		// !kill Bob -> a random attack message directed against Bob, unless Bob is on the immortals list.
 		[Command("kill")]
@@ -24,13 +24,25 @@ namespace ChancellorGerath.Verbs
 				if (target.Contains(immortal))
 					return ReplyAsync(Immortals[immortal]);
 			}
-			return ReplyAsync($"*{Attacks.PickRandom()} {target} with {Weapons.PickRandom()}*");
+			return ActAsync($"{Attacks.PickRandom()} {target} with {Weapons.PickRandom()}*");
 		}
 
-		private string[] Attacks = File.ReadAllLines("Verbs/Attacks.txt");
+		// !kill Bob -> a random phong message directed against Bob.
+		[Command("phong")]
+		[Summary("Does horrible, unspeakable things to someone,..")]
+		public Task PhongAsync([Remainder] [Summary("Who to phong")] string target)
+		{
+			return ActAsync($"{Phongs.PickRandom()} {target}");
+		}
 
-		private string[] Weapons = File.ReadAllLines("Verbs/Weapons.txt");
+		private string[] Attacks { get; } = File.ReadAllLines("Verbs/Attacks.txt");
 
-		private IDictionary<string, string> Immortals = JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Verbs/Immortals.json"));
+		private string[] Weapons { get; } = File.ReadAllLines("Verbs/Weapons.txt");
+
+		private string[] Phongs { get; } = File.ReadAllLines("Verbs/Phongs.txt");
+
+		private IDictionary<string, string> Immortals { get; } = JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Verbs/Immortals.json"));
+
+
 	}
 }
