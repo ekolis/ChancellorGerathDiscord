@@ -107,6 +107,8 @@ namespace ChancellorGerath.Conversation
 			}
 			if (who == "Chancellor Gerath")
 				return; // don't save bot messages to the main generator
+			if (!File.Exists($"Conversation/Markov.txt"))
+				File.Create($"Conversation/Markov.txt");
 			lines = File.ReadAllLines($"Conversation/Markov.txt");
 			if (!lines.Contains(arg.Content))
 			{
