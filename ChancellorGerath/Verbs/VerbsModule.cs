@@ -24,12 +24,12 @@ namespace ChancellorGerath.Verbs
 				if (target.Contains(immortal))
 					return ReplyAsync(Immortals[immortal]);
 			}
-			return ActAsync($"{Attacks.PickRandom()} {target} with {Weapons.PickRandom()}*");
+			return ActAsync($"{Attacks.PickRandom()} {target} with {Weapons.PickRandom()}");
 		}
 
 		// !kill Bob -> a random phong message directed against Bob.
 		[Command("phong")]
-		[Summary("Does horrible, unspeakable things to someone,..")]
+		[Summary("Does horrible, unspeakable things to someone.")]
 		public Task PhongAsync([Remainder] [Summary("Who to phong")] string target)
 		{
 			return ActAsync($"{Phongs.PickRandom()} {target}");
