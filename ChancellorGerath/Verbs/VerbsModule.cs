@@ -21,7 +21,7 @@ namespace ChancellorGerath.Verbs
 		{
 			foreach (var immortal in Immortals.Keys)
 			{
-				if (target.Contains(immortal))
+				if (target.Split(' ').Select(x => x.ToLower()).Contains(immortal))
 					return ReplyAsync(Immortals[immortal]);
 			}
 			return ActAsync($"{Attacks.PickRandom()} {target} with {Weapons.PickRandom()}");
