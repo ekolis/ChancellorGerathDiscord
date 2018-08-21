@@ -73,8 +73,76 @@ namespace ChancellorGerath.Conversation
 				return ReplyAsync($"I don't have any conversation history!");
 		}
 
+		// !grab who -> grabs a quote from someone.
+		[Command("grab")]
+		[Summary("Grabs the most recent post as a quote.")]
+		public Task GrabAsync()
+		{
+			var channel = Context.Channel;
+			if (MostRecentPost.ContainsKey(channel) && MostRecentPost[channel].Who != null && MostRecentPost[channel].Quote != null)
+			{
+				Grab(MostRecentPost[channel].Who, MostRecentPost[channel].Quote);
+				return ReplyAsync($"Grabbed {MostRecentPost[channel].Who}'s most recent post.");
+			}
+			else
+				return ReplyAsync("No post found to grab!");
+		}
+
+		// !grab who -> grabs a quote from someone.
+		[Command("grab")]
+		[Summary("Grabs a user's most recent post as a quote.")]
+		public Task GrabAsync([Remainder] [Summary("Who to grab")] string who)
+		{
+			var channel = Context.Channel;
+			if (MostRecentPosts.ContainsKey((channel, who)))
+			{
+				Grab(who, MostRecentPosts[(channel, who)]);
+				return ReplyAsync($"Grabbed {who}'s most recent post.");
+			}
+			else
+				return ReplyAsync("No post found to grab!");
+		}
+
+		// !grab who -> grabs a quote from someone.
+		[Command("quote")]
+		[Summary("Retrieves a random grabbed quote.")]
+		public Task QuoteAsync()
+		{
+			var quotes = Quotes.SelectMany(x => x.Value);
+			if (Quotes.Any())
+			{
+				return ReplyAsync(quotes.PickRandom());
+			}
+			else
+				return ReplyAsync("No post found to quote!");
+		}
+
+		// !grab who -> grabs a quote from someone.
+		[Command("quote")]
+		[Summary("Retrieves a random grabbed quote from the specified user.")]
+		public Task QuoteAsync([Remainder] [Summary("Who to quote")] string who)
+		{
+			if (Quotes.ContainsKey(who))
+			{
+				return ReplyAsync(Quotes[who].PickRandom());
+			}
+			else
+				return ReplyAsync("No post found to quote!");
+		}
+
+		private void Grab(string who, string quote)
+		{
+			if (!Quotes.ContainsKey(who))
+				Quotes.Add(who, new HashSet<string>());
+			Quotes[who].Add(quote);
+		}
+
 		private static IDictionary<string, Generator> Generators { get; set; } = new Dictionary<string, Generator>();
 		private static Generator EveryoneGenerator = new Generator(Extensions.Random);
+
+		private static IDictionary<string, ICollection<string>> Quotes = new Dictionary<string, ICollection<string>>();
+		private static IDictionary<(ISocketMessageChannel Channel, string Who), string> MostRecentPosts = new Dictionary<(ISocketMessageChannel Channel, string Who), string>();
+		private static IDictionary<ISocketMessageChannel, (string Who, string Quote)> MostRecentPost = new Dictionary<ISocketMessageChannel, (string Who, string Quote)>();
 
 		internal static async Task ListenAsync(SocketMessage arg)
 		{
@@ -97,7 +165,6 @@ namespace ChancellorGerath.Conversation
 			{
 				using (var s = await GetWriteStreamAsync($"Conversation/Markov.{who}.txt"))
 				{
-
 					using (var sw = new StreamWriter(s))
 					{
 						sw.WriteLine(arg.Content);
@@ -121,6 +188,9 @@ namespace ChancellorGerath.Conversation
 					}
 				}
 			}
+
+			MostRecentPost[arg.Channel] = (who, arg.Content);
+			MostRecentPosts[(arg.Channel, who)] = arg.Content;
 			return;
 		}
 
