@@ -68,7 +68,7 @@ namespace ChancellorGerath.Library
 			}
 		}
 
-		private List<CommandDefinition> CommandDefinitions { get; } = LoadCommandDefinitions().ToList();
+		private List<CommandDefinition> CommandDefinitions { get; } = LoadCommandDefinitions().OrderBy(x => x.Name).ToList();
 
 		private IDictionary<string, string> Topics { get; } = JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Library/Topics.json"));
 
