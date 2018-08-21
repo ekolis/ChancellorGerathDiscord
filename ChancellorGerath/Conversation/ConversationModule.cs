@@ -135,12 +135,19 @@ namespace ChancellorGerath.Conversation
 			if (!Quotes.ContainsKey(who))
 				Quotes.Add(who, new HashSet<string>());
 			Quotes[who].Add(quote);
+			if (!Directory.Exists("Conversation"))
+				Directory.CreateDirectory("Conversation");
+			File.WriteAllText("Conversation/Quotes.txt", JsonConvert.SerializeObject(Quotes));
 		}
 
 		private static IDictionary<string, Generator> Generators { get; set; } = new Dictionary<string, Generator>();
 		private static Generator EveryoneGenerator = new Generator(Extensions.Random);
 
-		private static IDictionary<string, ICollection<string>> Quotes = new Dictionary<string, ICollection<string>>();
+		private static IDictionary<string, ICollection<string>> Quotes =
+			File.Exists("Conversation/Quotes.txt") ?
+				JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Quotes.txt")) :
+				new Dictionary<string, ICollection<string>>();
+
 		private static IDictionary<(ISocketMessageChannel Channel, string Who), string> MostRecentPosts = new Dictionary<(ISocketMessageChannel Channel, string Who), string>();
 		private static IDictionary<ISocketMessageChannel, (string Who, string Quote)> MostRecentPost = new Dictionary<ISocketMessageChannel, (string Who, string Quote)>();
 
