@@ -57,5 +57,13 @@ namespace ChancellorGerath
 				return gu.Nickname ?? u.Username;
 			return u.Username;
 		}
+
+		public static string ReplaceSingle(this string fullstring, string original, string replacement)
+		{
+			var pos = fullstring.IndexOf(original);
+			if (pos < 0)
+				return fullstring;
+			return fullstring.Substring(0, pos) + replacement + fullstring.Substring(pos + original.Length);
+		}
 	}
 }

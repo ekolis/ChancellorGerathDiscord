@@ -1,0 +1,3 @@
+﻿I'd rather have {creature} {verb} in my {bodypart} than play {game}!
+{game} is a {adjective} {noun} full of {stuff} from {place}!
+I have never seen a worse {noun} than the {adjective} pile of {stuff} that is {game}!

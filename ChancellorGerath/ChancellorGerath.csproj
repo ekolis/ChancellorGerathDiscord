@@ -19,18 +19,49 @@
     <None Update="Token.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Verbs\Attacks.txt">
+    <None Update="Verbs\Avgn\Adjectives.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Verbs\Immortals.json">
+    <None Update="Verbs\Avgn\BodyParts.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Verbs\Phongs.txt">
+    <None Update="Verbs\Avgn\Creatures.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Verbs\Weapons.txt">
+    <None Update="Verbs\Avgn\Games.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Verbs\Avgn\Nouns.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Avgn\Places.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Avgn\Quotes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Avgn\Stuffs.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Avgn\Verbs.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Kill\Attacks.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Kill\Immortals.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Phong\Phongs.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Verbs\Kill\Weapons.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Tests\" />
   </ItemGroup>
 
 </Project>
