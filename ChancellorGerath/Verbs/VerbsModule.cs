@@ -131,7 +131,7 @@ namespace ChancellorGerath.Verbs
 				quote = quote.ReplaceSingle("{what}", what);
 			}
 
-			return ReplyAsync(quote);
+			return ActAsync(quote);
 		}
 	}
 }
