@@ -1,8 +1,10 @@
 ﻿using ChancellorGerath.Conversation;
 using Discord.Commands;
 using Discord.WebSocket;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,14 +13,19 @@ namespace ChancellorGerath
 {
 	public class CommandHandler
 	{
-		private readonly DiscordSocketClient _client;
-		private readonly CommandService _commands;
-
 		public CommandHandler(DiscordSocketClient client, CommandService commands)
 		{
 			_commands = commands;
 			_client = client;
 		}
+
+		private static IDictionary<string, string> Spam { get; } = JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Conversation/Spam.json"));
+		private readonly DiscordSocketClient _client;
+		private readonly CommandService _commands;
+
+		private DateTimeOffset nextSpamTime;
+
+
 
 		public async Task InstallCommandsAsync()
 		{
@@ -26,7 +33,7 @@ namespace ChancellorGerath
 			_client.MessageReceived += HandleCommandAsync;
 
 			// Hook up our chitchat listener
-			_client.MessageReceived += ConversationModule.ListenAsync;
+			_client.MessageReceived += ConversationModule.MarkovListenAsync;
 
 			// Here we discover all of the command modules in the entry
 			// assembly and load them. Starting from Discord.NET 2.0, a
@@ -48,30 +55,44 @@ namespace ChancellorGerath
 			// Create a number to track where the prefix ends and the command begins
 			int argPos = 0;
 
-			// Determine if the message is a command based on the prefix
-			if (!(message.HasCharPrefix('!', ref argPos) ||
-				message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
-				return;
-
 			// Create a WebSocket-based command context based on the message
 			var context = new SocketCommandContext(_client, message);
 
-			// Execute the command with the command context we just
-			// created, along with the service provider for precondition checks.
-
-			// Keep in mind that result does not indicate a return value
-			// rather an object stating if the command executed successfully.
-			var result = await _commands.ExecuteAsync(
-				context: context,
-				argPos: argPos,
-				services: null);
-
-			// Optionally, we may inform the user if the command fails
-			// to be executed; however, this may not always be desired,
-			// as it may clog up the request queue should a user spam a
-			// command.
-			// if (!result.IsSuccess)
-			// await context.Channel.SendMessageAsync(result.ErrorReason);
+			// Determine if the message is a command based on the prefix
+			if (!(message.HasCharPrefix('!', ref argPos) ||
+				message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
+			{
+				// not a command, try and spam a message if rate limit timer is up and we have a reply for this message
+				if (nextSpamTime == null || nextSpamTime <= DateTimeOffset.Now)
+				{
+					foreach (var kvp in Spam)
+					{
+						if (messageParam.Content.Contains(kvp.Key))
+						{
+							await context.Channel.SendMessageAsync(kvp.Value);
+							nextSpamTime = DateTimeOffset.Now + new TimeSpan(0, 1, 0);
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				// Execute the command with the command context we just
+				// created, along with the service provider for precondition checks.
+				// Optionally, we may inform the user if the command fails
+				// to be executed; however, this may not always be desired,
+				// as it may clog up the request queue should a user spam a
+				// command.
+				// if (!result.IsSuccess)
+				// await context.Channel.SendMessageAsync(result.ErrorReason);
+				// Keep in mind that result does not indicate a return value
+				// rather an object stating if the command executed successfully.
+				var result = await _commands.ExecuteAsync(
+						   context: context,
+						   argPos: argPos,
+						   services: null);
+			}
 		}
 	}
 }

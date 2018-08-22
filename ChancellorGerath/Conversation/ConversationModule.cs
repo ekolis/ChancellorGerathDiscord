@@ -44,34 +44,18 @@ namespace ChancellorGerath.Conversation
 			}
 		}
 
-		// !jabber Bob -> generates a random quote based on Bob's chat history.
-		[Command("jabber")]
-		[Summary("Mimics someone's speech patterns.")]
-		public Task JabberAsync([Remainder] [Summary("Who to mimic")] string who)
-		{
-			Generator gen;
-			if (Generators.ContainsKey(who))
-				gen = Generators[who];
-			else
-				return ReplyAsync($"I don't have any conversation history for {who}!");
+		private static IDictionary<string, Generator> Generators { get; set; } = new Dictionary<string, Generator>();
 
-			var preferredLength = Extensions.Random.Next(4, 12);
-			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
-			return ReplyAsync(gen.WriteSentence(preferredLength, maxLength).Text);
-		}
+		private static Generator EveryoneGenerator = new Generator(Extensions.Random);
 
-		// !jabber -> generates a random quote based on everyone's chat history.
-		[Command("jabber")]
-		[Summary("Mimics everyone's speech patterns.")]
-		public Task JabberAsync()
-		{
-			var preferredLength = Extensions.Random.Next(4, 12);
-			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
-			if (EveryoneGenerator.Lexicon.Any())
-				return ReplyAsync(EveryoneGenerator.WriteSentence(preferredLength, maxLength).Text);
-			else
-				return ReplyAsync($"I don't have any conversation history!");
-		}
+		private static IDictionary<ISocketMessageChannel, (string Who, string Quote)> MostRecentPost = new Dictionary<ISocketMessageChannel, (string Who, string Quote)>();
+
+		private static IDictionary<(ISocketMessageChannel Channel, string Who), string> MostRecentPosts = new Dictionary<(ISocketMessageChannel Channel, string Who), string>();
+
+		private static IDictionary<string, ICollection<string>> Quotes =
+					File.Exists("Conversation/Quotes.txt") ?
+						JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Quotes.txt")) :
+						new Dictionary<string, ICollection<string>>();
 
 		// !grab who -> grabs a quote from someone.
 		[Command("grab")]
@@ -103,6 +87,35 @@ namespace ChancellorGerath.Conversation
 				return ReplyAsync("No post found to grab!");
 		}
 
+		// !jabber Bob -> generates a random quote based on Bob's chat history.
+		[Command("jabber")]
+		[Summary("Mimics someone's speech patterns.")]
+		public Task JabberAsync([Remainder] [Summary("Who to mimic")] string who)
+		{
+			Generator gen;
+			if (Generators.ContainsKey(who))
+				gen = Generators[who];
+			else
+				return ReplyAsync($"I don't have any conversation history for {who}!");
+
+			var preferredLength = Extensions.Random.Next(4, 12);
+			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
+			return ReplyAsync(gen.WriteSentence(preferredLength, maxLength).Text);
+		}
+
+		// !jabber -> generates a random quote based on everyone's chat history.
+		[Command("jabber")]
+		[Summary("Mimics everyone's speech patterns.")]
+		public Task JabberAsync()
+		{
+			var preferredLength = Extensions.Random.Next(4, 12);
+			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
+			if (EveryoneGenerator.Lexicon.Any())
+				return ReplyAsync(EveryoneGenerator.WriteSentence(preferredLength, maxLength).Text);
+			else
+				return ReplyAsync($"I don't have any conversation history!");
+		}
+
 		// !grab who -> grabs a quote from someone.
 		[Command("quote")]
 		[Summary("Retrieves a random grabbed quote.")]
@@ -130,28 +143,7 @@ namespace ChancellorGerath.Conversation
 				return ReplyAsync("No post found to quote!");
 		}
 
-		private void Grab(string who, string quote)
-		{
-			if (!Quotes.ContainsKey(who))
-				Quotes.Add(who, new HashSet<string>());
-			Quotes[who].Add(quote);
-			if (!Directory.Exists("Conversation"))
-				Directory.CreateDirectory("Conversation");
-			File.WriteAllText("Conversation/Quotes.txt", JsonConvert.SerializeObject(Quotes));
-		}
-
-		private static IDictionary<string, Generator> Generators { get; set; } = new Dictionary<string, Generator>();
-		private static Generator EveryoneGenerator = new Generator(Extensions.Random);
-
-		private static IDictionary<string, ICollection<string>> Quotes =
-			File.Exists("Conversation/Quotes.txt") ?
-				JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Quotes.txt")) :
-				new Dictionary<string, ICollection<string>>();
-
-		private static IDictionary<(ISocketMessageChannel Channel, string Who), string> MostRecentPosts = new Dictionary<(ISocketMessageChannel Channel, string Who), string>();
-		private static IDictionary<ISocketMessageChannel, (string Who, string Quote)> MostRecentPost = new Dictionary<ISocketMessageChannel, (string Who, string Quote)>();
-
-		internal static async Task ListenAsync(SocketMessage arg)
+		internal static async Task MarkovListenAsync(SocketMessage arg)
 		{
 			// don't save bot commands
 			if (arg.Content.StartsWith("!"))
@@ -198,7 +190,6 @@ namespace ChancellorGerath.Conversation
 
 			MostRecentPost[arg.Channel] = (who, arg.Content);
 			MostRecentPosts[(arg.Channel, who)] = arg.Content;
-			return;
 		}
 
 		// https://stackoverflow.com/questions/1406808/wait-for-file-to-be-freed-by-process
@@ -222,6 +213,16 @@ namespace ChancellorGerath.Conversation
 						}
 					}
 				});
+		}
+
+		private void Grab(string who, string quote)
+		{
+			if (!Quotes.ContainsKey(who))
+				Quotes.Add(who, new HashSet<string>());
+			Quotes[who].Add(quote);
+			if (!Directory.Exists("Conversation"))
+				Directory.CreateDirectory("Conversation");
+			File.WriteAllText("Conversation/Quotes.txt", JsonConvert.SerializeObject(Quotes));
 		}
 	}
 }
