@@ -1,0 +1,8 @@
+﻿spends 20 mana to cast 'summon greater {what}'.
+performs arcane rituals to summon {what} from {place}.
+summons {what} using a magic brew made of {bodypart} of {creature}.
+sacrifices six hundred threescore and six {creature}s to summon {what}.
+nonchalantly summons the {adjective} {what} with a wave of the hand
+draws a pentagram in {stuff} to summon {what}.
+constructs an altar out of {noun}s and summons {what}.
+chants "{latin}, {latin}, {latin}!", thereby summoning {what}.

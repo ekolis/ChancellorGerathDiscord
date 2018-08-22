@@ -1,0 +1,16 @@
+﻿eye
+ear
+nose
+lip
+genitalia
+nipple
+big toe
+pinky finger
+ring finger
+heart
+liver
+gallbladder
+spleen
+appendix
+brain
+entrails
