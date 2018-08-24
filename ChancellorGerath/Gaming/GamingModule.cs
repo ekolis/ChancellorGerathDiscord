@@ -22,7 +22,7 @@ namespace ChancellorGerath.Verbs
 		{
 			try
 			{
-				var regex = new Regex(@"(.*)d(.*)([\+\-\*])?(.*)?");
+				var regex = new Regex(@"(\d+)d(\d+)(.?)(\d*)");
 				var match = regex.Match(dice);
 				var count = int.Parse(match.Groups[1].Value);
 				var sides = int.Parse(match.Groups[2].Value);
