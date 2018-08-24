@@ -19,13 +19,11 @@ namespace ChancellorGerath
 			_client = client;
 		}
 
-		private static IDictionary<string, string> Spam { get; } = JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Conversation/Spam.json"));
+		private static IDictionary<string, ICollection<string>> Spam { get; } = JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Spam.json"));
 		private readonly DiscordSocketClient _client;
 		private readonly CommandService _commands;
 
 		private DateTimeOffset nextSpamTime;
-
-
 
 		public async Task InstallCommandsAsync()
 		{
@@ -67,10 +65,10 @@ namespace ChancellorGerath
 				{
 					foreach (var kvp in Spam)
 					{
-						if (messageParam.Content.Contains(kvp.Key))
+						if (messageParam.Content.Contains(kvp.Key, StringComparison.OrdinalIgnoreCase))
 						{
-							await context.Channel.SendMessageAsync(kvp.Value);
-							nextSpamTime = DateTimeOffset.Now + new TimeSpan(0, 1, 0);
+							await context.Channel.SendMessageAsync(kvp.Value.PickRandom());
+							nextSpamTime = DateTimeOffset.Now + new TimeSpan(0, 1, 0); // wait one minute
 							break;
 						}
 					}
