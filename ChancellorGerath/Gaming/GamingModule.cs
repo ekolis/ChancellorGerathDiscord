@@ -22,23 +22,43 @@ namespace ChancellorGerath.Verbs
 		{
 			try
 			{
-				var regex = new Regex(@"(\d+)d(\d+)(.?)(\d*)");
+				var regex = new Regex(@"([-+]?[0-9]*)d([-]?[0-9]*)(.?)(\d*)");
 				var match = regex.Match(dice);
-				var count = int.Parse(match.Groups[1].Value);
+
+				int count;
+				if (string.IsNullOrWhiteSpace(match.Groups[1].Value))
+					count = 1;
+				else
+					count = int.Parse(match.Groups[1].Value);
+				if (count == 0)
+					return ReplyAsync("You now know the sound of zero dice rolling.");
+				if (count < 0)
+					return ReplyAsync("What, you want me to make some dice out of antimatter?");
+
 				var sides = int.Parse(match.Groups[2].Value);
+
 				string op;
 				if (string.IsNullOrWhiteSpace(match.Groups[3].Value))
 					op = "+";
 				else
 					op = match.Groups[3].Value ?? "+";
+
 				int modifier;
 				if (string.IsNullOrWhiteSpace(match.Groups[4].Value))
 					modifier = 0;
 				else
 					modifier = int.Parse(match.Groups[4].Value);
+
 				var rolls = new List<int>();
 				for (var i = 0; i < count; i++)
-					rolls.Add(Extensions.Random.Next(1, sides + 1));
+				{
+					if (sides > 0)
+						rolls.Add(Extensions.Random.Next(1, sides + 1));
+					else if (sides < 0)
+						rolls.Add(-Extensions.Random.Next(1, -sides + 1));
+					else
+						rolls.Add(0);
+				}
 				var result = rolls.Sum();
 				if (op == "+")
 					result += modifier;
