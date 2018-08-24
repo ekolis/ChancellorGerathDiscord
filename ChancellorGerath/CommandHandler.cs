@@ -60,8 +60,8 @@ namespace ChancellorGerath
 			if (!(message.HasCharPrefix('!', ref argPos) ||
 				message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
 			{
-				// not a command, try and spam a message if rate limit timer is up and we have a reply for this message
-				if (nextSpamTime == null || nextSpamTime <= DateTimeOffset.Now)
+				// not a command, try and spam a message if rate limit timer is up and we have a reply for this message and we're not replying to ourselves
+				if ((nextSpamTime == null || nextSpamTime <= DateTimeOffset.Now) && message.Author.Username != "Chancellor Gerath")
 				{
 					foreach (var kvp in Spam)
 					{
