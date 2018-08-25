@@ -15,6 +15,19 @@ namespace ChancellorGerath
 		public static Random Random { get; } = new Random();
 
 		/// <summary>
+		/// If the user is a SocketGuildUser, get their nickname.
+		/// Otherwise just use their username.
+		/// </summary>
+		/// <param name="u"></param>
+		/// <returns></returns>
+		public static string GetNicknameOrUsername(this SocketUser u)
+		{
+			if (u is SocketGuildUser gu)
+				return gu.Nickname ?? u.Username;
+			return u.Username;
+		}
+
+		/// <summary>
 		/// Picks a random item from a list.
 		/// </summary>
 		/// <typeparam name="T">The type of item.</typeparam>
@@ -45,25 +58,23 @@ namespace ChancellorGerath
 			throw new InvalidOperationException($"Failed to pick a weighted item from a dictionary containing {dict.Count} items totaling {total} weight with a dice roll of {diceroll}. Current count is {count}.");
 		}
 
-		/// <summary>
-		/// If the user is a SocketGuildUser, get their nickname.
-		/// Otherwise just use their username.
-		/// </summary>
-		/// <param name="u"></param>
-		/// <returns></returns>
-		public static string GetNicknameOrUsername(this SocketUser u)
-		{
-			if (u is SocketGuildUser gu)
-				return gu.Nickname ?? u.Username;
-			return u.Username;
-		}
-
 		public static string ReplaceSingle(this string fullstring, string original, string replacement)
 		{
 			var pos = fullstring.IndexOf(original);
 			if (pos < 0)
 				return fullstring;
 			return fullstring.Substring(0, pos) + replacement + fullstring.Substring(pos + original.Length);
+		}
+
+		/// <summary>
+		/// Shuffles a list into a random order.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list"></param>
+		/// <returns></returns>
+		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> list)
+		{
+			return list.Select(value => (Random.Next(), value)).OrderBy(x => x.Item1).Select(x => x.value);
 		}
 	}
 }
