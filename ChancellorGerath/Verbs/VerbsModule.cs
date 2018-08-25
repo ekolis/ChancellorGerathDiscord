@@ -41,6 +41,8 @@ namespace ChancellorGerath.Verbs
 
 		private string[] PhongPhongs { get; } = File.ReadAllLines("Verbs/Phong/Phongs.txt");
 
+		private string[] SmashAttacks { get; } = File.ReadAllLines("Verbs/Smash/Attacks.txt");
+
 		private string[] SummonAdjectives { get; } = File.ReadAllLines("Verbs/Summon/Adjectives.txt");
 
 		private string[] SummonBodyParts { get; } = File.ReadAllLines("Verbs/Summon/BodyParts.txt");
@@ -107,6 +109,14 @@ namespace ChancellorGerath.Verbs
 		public Task PhongAsync([Remainder] [Summary("Who to phong")] string target)
 		{
 			return ActAsync($"{PhongPhongs.PickRandom()} {target}");
+		}
+
+		// !smash Bob -> a random Super Smash Bros attack message directed against Bob.
+		[Command("smash")]
+		[Summary("Attacks someone like in Super Smash Bros.")]
+		public Task SmashAsync([Remainder] [Summary("Who to smash")] string target)
+		{
+			return ActAsync($"{SmashAttacks.PickRandom()} {target}");
 		}
 
 		// !summon what -> summons someone, if it's a user they'll be pinged.
