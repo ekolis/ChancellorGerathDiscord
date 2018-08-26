@@ -15,7 +15,7 @@ namespace ChancellorGerath.Conversation
 
 		private string[] Races { get; } = File.ReadAllLines("Conversation/Spam/Races.txt");
 
-		private DateTimeOffset nextSpamTime;
+		private static DateTimeOffset nextSpamTime;
 
 		/// <summary>
 		/// Tries to reply to a spam trigger.
