@@ -16,6 +16,7 @@ namespace ChancellorGerath.Conversation
 		private string[] Races { get; } = File.ReadAllLines("Conversation/Spam/Races.txt");
 
 		private static DateTimeOffset nextSpamTime;
+		private static IDictionary<ISocketMessageChannel, int> spamMessageCountdowns = new Dictionary<ISocketMessageChannel, int>();
 
 		/// <summary>
 		/// Tries to reply to a spam trigger.
@@ -26,8 +27,10 @@ namespace ChancellorGerath.Conversation
 			if (message == null)
 				return;
 
-			// not a command, try and spam a message if rate limit timer is up and we have a reply for this message and we're not replying to ourselves
-			if ((nextSpamTime == null || nextSpamTime <= DateTimeOffset.Now) && message.Author.Username != "Chancellor Gerath")
+			// not a command, try and spam a message if rate limit timer/message-counter is up and we have a reply for this message and we're not replying to ourselves
+			if ((nextSpamTime == null || nextSpamTime <= DateTimeOffset.Now)
+				&& (!spamMessageCountdowns.ContainsKey(message.Channel) || spamMessageCountdowns[message.Channel] <= 0)
+				&& message.Author.Username != "Chancellor Gerath")
 			{
 				foreach (var kvp in Triggers.Shuffle())
 				{
@@ -36,9 +39,19 @@ namespace ChancellorGerath.Conversation
 						var text = kvp.Value.PickRandom();
 						text = text.Replace("{race}", Races.PickRandom());
 						await context.Channel.SendMessageAsync(text);
-						nextSpamTime = DateTimeOffset.Now + new TimeSpan(0, 1, 0); // wait one minute
+						nextSpamTime = DateTimeOffset.Now + new TimeSpan(0, 0, Extensions.Random.Next(30, 121)); // wait between 30 seconds and 2 minutes
+						spamMessageCountdowns[message.Channel] = Extensions.Random.Next(5, 16); // wait between 5 and 15 messages
 						break;
 					}
+				}
+			}
+			else
+			{
+				// count down messages until we can spam again
+				if (message.Author.Username != "Chancellor Gerath")
+				{
+					foreach (var chan in spamMessageCountdowns.Keys)
+						spamMessageCountdowns[chan]--;
 				}
 			}
 		}
