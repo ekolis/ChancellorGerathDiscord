@@ -48,9 +48,9 @@ namespace ChancellorGerath.Conversation
 
 		private static Generator EveryoneGenerator = new Generator(Extensions.Random);
 
-		private static IDictionary<ISocketMessageChannel, (string Who, string Quote)> MostRecentPost = new Dictionary<ISocketMessageChannel, (string Who, string Quote)>();
+		private static IDictionary<string, (string Who, string Quote)> MostRecentPost = new Dictionary<string, (string Who, string Quote)>();
 
-		private static IDictionary<(ISocketMessageChannel Channel, string Who), string> MostRecentPosts = new Dictionary<(ISocketMessageChannel Channel, string Who), string>();
+		private static IDictionary<(string ChannelName, string Who), string> MostRecentPosts = new Dictionary<(string ChannelName, string Who), string>();
 
 		private static IDictionary<string, ICollection<string>> Quotes =
 					File.Exists("Conversation/Quotes.txt") ?
@@ -63,10 +63,10 @@ namespace ChancellorGerath.Conversation
 		public Task GrabAsync()
 		{
 			var channel = Context.Channel;
-			if (MostRecentPost.ContainsKey(channel) && MostRecentPost[channel].Who != null && MostRecentPost[channel].Quote != null)
+			if (MostRecentPost.ContainsKey(channel.Name) && MostRecentPost[channel.Name].Who != null && MostRecentPost[channel.Name].Quote != null)
 			{
-				Grab(MostRecentPost[channel].Who, MostRecentPost[channel].Quote);
-				return ReplyAsync($"Grabbed {MostRecentPost[channel].Who}'s most recent post.");
+				Grab(MostRecentPost[channel.Name].Who, MostRecentPost[channel.Name].Quote);
+				return ReplyAsync($"Grabbed {MostRecentPost[channel.Name].Who}'s most recent post.");
 			}
 			else
 				return ReplyAsync("No post found to grab!");
@@ -78,9 +78,9 @@ namespace ChancellorGerath.Conversation
 		public Task GrabAsync([Remainder] [Summary("Who to grab")] string who)
 		{
 			var channel = Context.Channel;
-			if (MostRecentPosts.ContainsKey((channel, who)))
+			if (MostRecentPosts.ContainsKey((channel.Name, who)))
 			{
-				Grab(who, MostRecentPosts[(channel, who)]);
+				Grab(who, MostRecentPosts[(channel.Name, who)]);
 				return ReplyAsync($"Grabbed {who}'s most recent post.");
 			}
 			else
@@ -150,6 +150,10 @@ namespace ChancellorGerath.Conversation
 				return;
 
 			var who = arg.Author.GetNicknameOrUsername();
+
+			MostRecentPost[arg.Channel.Name] = (who, arg.Content);
+			MostRecentPosts[(arg.Channel.Name, who)] = arg.Content;
+
 			if (!Generators.ContainsKey(who))
 				Generators.Add(who, new Generator(Extensions.Random));
 			Generators[who].ReadChain(arg.Content);
@@ -187,9 +191,6 @@ namespace ChancellorGerath.Conversation
 					}
 				}
 			}
-
-			MostRecentPost[arg.Channel] = (who, arg.Content);
-			MostRecentPosts[(arg.Channel, who)] = arg.Content;
 		}
 
 		// https://stackoverflow.com/questions/1406808/wait-for-file-to-be-freed-by-process
