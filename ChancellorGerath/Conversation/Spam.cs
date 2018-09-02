@@ -11,7 +11,7 @@ namespace ChancellorGerath.Conversation
 {
 	public class Spam
 	{
-		private static IDictionary<string, ICollection<string>> Triggers { get; } = JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Spam/Triggers.json"));
+		private static Cache<IDictionary<string, ICollection<string>>> Triggers { get; } = new Cache<IDictionary<string, ICollection<string>>>(() => JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Spam/Triggers.json")));
 
 		private string[] Races { get; } = File.ReadAllLines("Conversation/Spam/Races.txt");
 
@@ -32,7 +32,7 @@ namespace ChancellorGerath.Conversation
 				&& (!spamMessageCountdowns.ContainsKey(message.Channel) || spamMessageCountdowns[message.Channel] <= 0)
 				&& message.Author.Username != "Chancellor Gerath")
 			{
-				foreach (var kvp in Triggers.Shuffle())
+				foreach (var kvp in Triggers.Data.Shuffle())
 				{
 					if (messageParam.Content.Contains(kvp.Key, StringComparison.OrdinalIgnoreCase))
 					{

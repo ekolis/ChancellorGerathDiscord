@@ -21,8 +21,8 @@ namespace ChancellorGerath.Library
 		[Summary("Looks something up in the library.")]
 		public Task WhatIsAsync([Remainder] [Summary("What to look up")] string topic)
 		{
-			if (Topics.ContainsKey(topic.ToLower()))
-				return ReplyAsync($"{topic} is {Topics[topic]}");
+			if (Topics.Data.ContainsKey(topic.ToLower()))
+				return ReplyAsync($"{topic} is {Topics.Data[topic]}");
 			else
 				return ReplyAsync($"Sorry, I don't know anything about {topic}. Try Googling it? http://www.google.com/search?q={HttpUtility.UrlEncode(topic)}");
 		}
@@ -70,7 +70,7 @@ namespace ChancellorGerath.Library
 
 		private List<CommandDefinition> CommandDefinitions { get; } = LoadCommandDefinitions().OrderBy(x => x.Name).ToList();
 
-		private IDictionary<string, string> Topics { get; } = JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Library/Topics.json"));
+		private Cache<IDictionary<string, string>> Topics { get; } = new Cache<IDictionary<string, string>>(() => JsonConvert.DeserializeObject<IDictionary<string, string>>(File.ReadAllText("Library/Topics.json")));
 
 		private class CommandDefinition
 		{

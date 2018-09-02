@@ -52,10 +52,10 @@ namespace ChancellorGerath.Conversation
 
 		private static IDictionary<(string ChannelName, string Who), string> MostRecentPosts = new Dictionary<(string ChannelName, string Who), string>();
 
-		private static IDictionary<string, ICollection<string>> Quotes =
-					File.Exists("Conversation/Quotes.txt") ?
+		private static Cache<IDictionary<string, ICollection<string>>> Quotes =
+					new Cache<IDictionary<string, ICollection<string>>>(() => File.Exists("Conversation/Quotes.txt") ?
 						JsonConvert.DeserializeObject<IDictionary<string, ICollection<string>>>(File.ReadAllText("Conversation/Quotes.txt")) :
-						new Dictionary<string, ICollection<string>>();
+						new Dictionary<string, ICollection<string>>());
 
 		// !grab who -> grabs a quote from someone.
 		[Command("grab")]
@@ -121,8 +121,8 @@ namespace ChancellorGerath.Conversation
 		[Summary("Retrieves a random grabbed quote.")]
 		public Task QuoteAsync()
 		{
-			var quotes = Quotes.SelectMany(x => x.Value);
-			if (Quotes.Any())
+			var quotes = Quotes.Data.SelectMany(x => x.Value);
+			if (Quotes.Data.Any())
 			{
 				return ReplyAsync(quotes.PickRandom());
 			}
@@ -135,9 +135,9 @@ namespace ChancellorGerath.Conversation
 		[Summary("Retrieves a random grabbed quote from the specified user.")]
 		public Task QuoteAsync([Remainder] [Summary("Who to quote")] string who)
 		{
-			if (Quotes.ContainsKey(who))
+			if (Quotes.Data.ContainsKey(who))
 			{
-				return ReplyAsync(Quotes[who].PickRandom());
+				return ReplyAsync(Quotes.Data[who].PickRandom());
 			}
 			else
 				return ReplyAsync("No post found to quote!");
@@ -218,12 +218,13 @@ namespace ChancellorGerath.Conversation
 
 		private void Grab(string who, string quote)
 		{
-			if (!Quotes.ContainsKey(who))
-				Quotes.Add(who, new HashSet<string>());
-			Quotes[who].Add(quote);
+			var quotes = Quotes.Data;
+			if (!quotes.ContainsKey(who))
+				quotes.Add(who, new HashSet<string>());
+			quotes[who].Add(quote);
 			if (!Directory.Exists("Conversation"))
 				Directory.CreateDirectory("Conversation");
-			File.WriteAllText("Conversation/Quotes.txt", JsonConvert.SerializeObject(Quotes));
+			File.WriteAllText("Conversation/Quotes.txt", JsonConvert.SerializeObject(quotes));
 		}
 	}
 }
