@@ -118,7 +118,7 @@
 	"trout": [ "The trout falls to the ground and slithers off to the nearest river." ],
 	"try": [ "Genocide or surrender; there is no try." ],
 	"unix": [ "I'm livin' it up like it's 1979!" ],
-	"vb":  ["10 PRINT ""HELLO WORLD""\n20 GOTO 10"],
+	"vb":  ["10 PRINT \"HELLO WORLD\"\n20 GOTO 10"],
 	"vectac": [ "Imma fire ALL my torpedo!", "His pattern indicates two-dimensional thinking..." ],
 	"violist": [ "*starts playing a violin.*" ],
 	"vista": [ "Well, there's your problem right there." ],
