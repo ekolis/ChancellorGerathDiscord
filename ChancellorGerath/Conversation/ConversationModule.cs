@@ -98,8 +98,8 @@ namespace ChancellorGerath.Conversation
 			else
 				return ReplyAsync($"I don't have any conversation history for {who}!");
 
-			var preferredLength = Extensions.Random.Next(4, 12);
-			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
+			var preferredLength = Extensions.Random.Next(8, 32);
+			var maxLength = preferredLength + Extensions.Random.Next(8, 32);
 			return ReplyAsync(gen.WriteSentence(preferredLength, maxLength).Text);
 		}
 
@@ -108,8 +108,8 @@ namespace ChancellorGerath.Conversation
 		[Summary("Mimics everyone's speech patterns.")]
 		public Task JabberAsync()
 		{
-			var preferredLength = Extensions.Random.Next(4, 12);
-			var maxLength = preferredLength + Extensions.Random.Next(2, 6);
+			var preferredLength = Extensions.Random.Next(8, 32);
+			var maxLength = preferredLength + Extensions.Random.Next(8, 32);
 			if (EveryoneGenerator.Lexicon.Any())
 				return ReplyAsync(EveryoneGenerator.WriteSentence(preferredLength, maxLength).Text);
 			else
