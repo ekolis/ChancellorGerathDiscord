@@ -76,5 +76,22 @@ namespace ChancellorGerath
 		{
 			return list.Select(value => (Random.Next(), value)).OrderBy(x => x.Item1).Select(x => x.value);
 		}
+
+		public static bool ContainsRange<T>(this IEnumerable<T> haystack, IEnumerable<T> needle)
+		{
+			var idx = 0;
+			for (var i = 0; i < haystack.Count(); i++)
+			{
+				if (idx == needle.Count())
+					break;
+				var item = haystack.ElementAt(i);
+				var match = needle.ElementAt(idx);
+				if (item.Equals(match))
+					idx++;
+				else
+					idx = 0;
+			}
+			return idx == needle.Count();
+		}
 	}
 }
