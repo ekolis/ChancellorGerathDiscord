@@ -1,0 +1,5 @@
+﻿*jabs a finger at {who}*
+*logs in to Facebook and sends a "poke" to {who}*
+POKEMON! Gotta catch 'em all, {who}!
+*does horrible, unspeakable things to {who}*
+*does kind, pleasant things for {who}*

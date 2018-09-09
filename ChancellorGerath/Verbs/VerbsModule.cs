@@ -39,7 +39,11 @@ namespace ChancellorGerath.Verbs
 
 		private Cache<string[]> KillWeapons { get; } = new Cache<string[]>(() => File.ReadAllLines("Verbs/Kill/Weapons.txt"));
 
+		private Cache<string[]> NagNags { get; } = new Cache<string[]>(() => File.ReadAllLines("Verbs/Nag/Nags.txt"));
+
 		private Cache<string[]> PhongPhongs { get; } = new Cache<string[]>(() => File.ReadAllLines("Verbs/Phong/Phongs.txt"));
+
+		private Cache<string[]> PokePokes { get; } = new Cache<string[]>(() => File.ReadAllLines("Verbs/Poke/Pokes.txt"));
 
 		private Cache<string[]> SmashAttacks { get; } = new Cache<string[]>(() => File.ReadAllLines("Verbs/Smash/Attacks.txt"));
 
@@ -93,28 +97,50 @@ namespace ChancellorGerath.Verbs
 		// !kill Bob -> a random attack message directed against Bob, unless Bob is on the immortals list.
 		[Command("kill")]
 		[Summary("Attacks someone fatally.")]
-		public Task KillAsync([Remainder] [Summary("Who to kill")] string target)
+		public Task KillAsync([Remainder] [Summary("Who to kill")] string who)
 		{
 			foreach (var immortal in KillImmortals.Data.Keys)
 			{
-				if (target.Split(' ').Select(x => x.ToLower()).ContainsRange(immortal.Split(' ').Select(x => x.ToLower())))
+				if (who.Split(' ').Select(x => x.ToLower()).ContainsRange(immortal.Split(' ').Select(x => x.ToLower())))
 					return ReplyAsync(KillImmortals.Data[immortal]);
 			}
-			return ActAsync($"{KillAttacks.Data.PickRandom()} {target} with {KillWeapons.Data.PickRandom()}");
+			return ActAsync($"{KillAttacks.Data.PickRandom()} {who} with {KillWeapons.Data.PickRandom()}");
+		}
+
+		// !nag Bob -> a random nag message directed against Bob.
+		[Command("nag")]
+		[Summary("Nags someone, say, about their overdue PBW turns.")]
+		public Task NagAsync([Remainder] [Summary("Who to nag")] string who)
+		{
+			var users = Context.Guild.Users.Where(u => u.GetNicknameOrUsername() == who);
+			if (users.Count() == 1)
+				who = users.Single().Mention;
+			return ReplyAsync(NagNags.Data.PickRandom().Replace("{who}", who));
 		}
 
 		// !kill Bob -> a random phong message directed against Bob.
 		[Command("phong")]
 		[Summary("Does horrible, unspeakable things to someone.")]
-		public Task PhongAsync([Remainder] [Summary("Who to phong")] string target)
+		public Task PhongAsync([Remainder] [Summary("Who or what to phong")] string target)
 		{
 			return ActAsync($"{PhongPhongs.Data.PickRandom()} {target}");
+		}
+
+		// !poke Bob -> a random poke message directed against Bob.
+		[Command("poke")]
+		[Summary("Pokes someone just to be annoying.")]
+		public Task PokeAsync([Remainder] [Summary("Who to poke")] string who)
+		{
+			var users = Context.Guild.Users.Where(u => u.GetNicknameOrUsername() == who);
+			if (users.Count() == 1)
+				who = users.Single().Mention;
+			return ReplyAsync(PokePokes.Data.PickRandom().Replace("{who}", who));
 		}
 
 		// !smash Bob -> a random Super Smash Bros attack message directed against Bob.
 		[Command("smash")]
 		[Summary("Attacks someone like in Super Smash Bros.")]
-		public Task SmashAsync([Remainder] [Summary("Who to smash")] string target)
+		public Task SmashAsync([Remainder] [Summary("Who or what to smash")] string target)
 		{
 			return ActAsync($"{SmashAttacks.Data.PickRandom()} {target}");
 		}
