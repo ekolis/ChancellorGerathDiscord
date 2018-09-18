@@ -21,3 +21,4 @@ fidelis
 azarath
 metrion
 zinthos
+malfador
