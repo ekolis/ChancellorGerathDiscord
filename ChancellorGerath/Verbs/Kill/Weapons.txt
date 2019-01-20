@@ -10,7 +10,7 @@ a range check error in se5.exe
 a magma beam that fires magma from the core of a star
 a +1 enchanted shard cannon of armor piercing
 a futon torpedo
-a cloud of Von Neumman nano-disassemblers
+a cloud of Von Neumann nano-disassemblers
 a trained vorpal bunny
 a 9001kT weight
 a Nerf disruptor
