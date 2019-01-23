@@ -2,8 +2,8 @@
 	// Space Empires games
 	"se": "Aaron Hall's Space Empires series, comprising SE1 through SE5, as well as the spinoff action RPG Starfury and the never-spoken-of Facebook game SE: Battle for Supremacy.",
 	"space empires": "Aaron Hall's Space Empires series, comprising SE1 through SE5, as well as the spinoff action RPG Starfury and the never-spoken-of Facebook game SE: Battle for Supremacy.",
-	"se1": "The original Space Empires game. Never actually released apart from an SE1/2/3 bundle. The black sheep of the Space Empires family, it didn't even have designable ships or warp points!",
-	"sei": "The original Space Empires game. Never actually released apart from an SE1/2/3 bundle. The black sheep of the Space Empires family, it didn't even have designable ships or warp points!",
+	"se1": "the original Space Empires game. Never actually released apart from an SE1/2/3 bundle. The black sheep of the Space Empires family, it didn't even have designable ships or warp points!",
+	"sei": "the original Space Empires game. Never actually released apart from an SE1/2/3 bundle. The black sheep of the Space Empires family, it didn't even have designable ships or warp points!",
 	"se2": "Space Empires II. The second game in the Space Empires series, released in the mid-1990s. Only supported up to four players, and didn't have online multiplayer or moddability. Still quite a bit of fun back in the day!",
 	"seii": "Space Empires II. The second game in the Space Empires series, released in the mid-1990s. Only supported up to four players, and didn't have online multiplayer or moddability. Still quite a bit of fun back in the day!",
 	"se3": "Space Empires III. The third game in the Space Empires series, released in 1997. Arguably the most balanced Space Empires game, but held back by limited moddability.",
@@ -12,8 +12,8 @@
 	"seiv": "Space Empires IV. The fourth game in the Space Empires series, released in 2000. Considered to be the high point of the series by many (hipsters?), much like Super Smash Bros Melee, which was coincidentally released around the same time.",
 	"se5": "Space Empires V. The fifth game in the Space Empires series, released in 2006. Considered to be the low point of the series by many (hipsters?), much like Super Smash Bros Brawl, which was coincidentally released around the same time.",
 	"sev": "Space Empires V. The fifth game in the Space Empires series, released in 2006. Considered to be the low point of the series by many (hipsters?), much like Super Smash Bros Brawl, which was coincidentally released around the same time.",
-	"se10": "Space Empires X. The tenth game in the Space Empires series, released to commemmorate the 100th anniversary of the moon landing in 2069. This game introduces a large number of innovations to the series, such as first person perspective and haptic feedback. It was the most popular game in the series by far, being played by billions of people around the world.",
-	"sex": "Space Empires X. The tenth game in the Space Empires series, released to commemmorate the 100th anniversary of the moon landing in 2069. This game introduces a large number of innovations to the series, such as first person perspective and haptic feedback. It was the most popular game in the series by far, being played by billions of people around the world.",
+	"se10": "Space Empires X. The tenth game in the Space Empires series, released to commemorate the 100th anniversary of the moon landing in 2069. This game introduces a large number of innovations to the series, such as first person perspective and haptic feedback. It was the most popular game in the series by far, being played by billions of people around the world.",
+	"sex": "Space Empires X. The tenth game in the Space Empires series, released to commemorate the 100th anniversary of the moon landing in 2069. This game introduces a large number of innovations to the series, such as first person perspective and haptic feedback. It was the most popular game in the series by far, being played by billions of people around the world.",
 	"starfury": "a spinoff of the Space Empires series in the action-RPG genre, released in 2003. Now you too can be a starship captain, and crash your ship into asteroids the size of planets!",
 	"bfs": "Battle for Supremacy. Go on, ask me more. On second thought, don't bother. You probably don't even want to know.",
 	"battle for supremacy": "essentially Farmville with a Space Empires skin on it. Don't even bother.",
@@ -66,7 +66,7 @@
 	"aaron hall": "the mad genius behind the Space Empires series. Also created Dungeon Odyssey, World Supremacy, and Space Captain.",
 	"sj": "Suicide Junkie. Go on, ask me more!",
 	"suicide junkie": "Creator of Carrier Battles, Event Horizon, Vector Tactics, and much, much more.",
-	"gerath": "Its-a me! Gerath! ...Or is it that other guy on IRC who took my name before I could get to it?!",
+	"gerath": "-a me! Gerath! ...Or is it that other guy on IRC who took my name before I could get to it?!",
 	"eorg": "the guy who eorging was named after. (Go ahead, ask me what eorging is. I dare you.) He's my favorite SE4 player because he always played as the Phong.",
 	"gutb": "the guy who thought he could win in SE4 using only escorts, due to a misunderstanding of how evasion bonuses work. Sadly, this strategy actually works in stock SE5, due to the horrible balance of the game...",
 	"ekolis": "the guy who got me into Discord, and also worked on FrEee and Stellar Warfare.",
@@ -77,7 +77,7 @@
 	"fyron": "the totally radical dude who created http://www.spaceempires.net",
 
 	// bots
-	"chancellor gerath": "Its-a me! Chancellor Gerath of the Phong Confederation!",
+	"chancellor gerath": "-a me! Chancellor Gerath of the Phong Confederation!",
 	"xintis": "Who's that? Does he rule some empire I should be eorging?",
 
 	// races
