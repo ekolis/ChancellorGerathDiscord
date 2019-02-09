@@ -28,3 +28,7 @@ domine
 dona
 eis
 requiem
+fee
+fie
+foe
+fum
