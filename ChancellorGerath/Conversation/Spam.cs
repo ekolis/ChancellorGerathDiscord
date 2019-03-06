@@ -1,11 +1,13 @@
-﻿using Discord.Commands;
-using Discord.WebSocket;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Discord.Commands;
+using Discord.WebSocket;
+using Newtonsoft.Json;
 
 namespace ChancellorGerath.Conversation
 {
@@ -34,7 +36,10 @@ namespace ChancellorGerath.Conversation
 			{
 				foreach (var kvp in Triggers.Data.Shuffle())
 				{
-					if (messageParam.Content.Contains(kvp.Key, StringComparison.OrdinalIgnoreCase))
+					// search for the trigger but only surrounded by word boundaries
+					// so "batch" should not be a trigger for "tc" but "tc is evil" and "I hate tc" should be
+					var regex = new Regex("\\b" + Regex.Escape(kvp.Key) + "\\b", RegexOptions.IgnoreCase);
+					if (regex.Matches(messageParam.Content).Any())
 					{
 						var text = kvp.Value.PickRandom();
 						text = text.Replace("{race}", Races.PickRandom());
