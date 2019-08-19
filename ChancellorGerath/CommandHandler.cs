@@ -33,7 +33,7 @@ namespace ChancellorGerath
 			//
 			// If you do not use Dependency Injection, pass null.
 			// See Dependency Injection guide for more information.
-			await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly());
+			await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), null);
 		}
 
 		private async Task HandleCommandAsync(SocketMessage messageParam)
