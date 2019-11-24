@@ -21,7 +21,8 @@ namespace ChancellorGerath.Library
 		[Summary("Looks something up in the library.")]
 		public Task WhatIsAsync([Remainder] [Summary("What to look up")] string topic)
 		{
-			if (Topics.Data.ContainsKey(topic.ToLower()))
+			topic = topic.ToLower();
+			if (Topics.Data.ContainsKey(topic))
 				return ReplyAsync($"{topic} is {Topics.Data[topic]}");
 			else
 				return ReplyAsync($"Sorry, I don't know anything about {topic}. Try Googling it? http://www.google.com/search?q={HttpUtility.UrlEncode(topic)}");
