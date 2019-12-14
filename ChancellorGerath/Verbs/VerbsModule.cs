@@ -65,6 +65,8 @@ namespace ChancellorGerath.Verbs
 
 		private Cache<string[]> SummonVerbs { get; } = File.ReadAllLines("Verbs/Summon/Verbs.txt");
 
+		private Cache<string[]> EightBallAnswers { get; } = File.ReadAllLines("Verbs/8ball/Answers.txt");
+
 		// !avgn -> a randomly generated AVGN quote.
 		[Command("avgn")]
 		[Summary("Channels the wrath of the Angry Video Game Nerd against a randomly selected shitty game.")]
@@ -168,6 +170,28 @@ namespace ChancellorGerath.Verbs
 			}
 
 			return ActAsync(quote);
+		}
+
+		// !8ball -> asks the Magic 8 Ball (tm) a stupid question.
+		[Command("8ball")]
+		[Summary("Asks the magic 8 ball a question.")]
+		public Task EightBall()
+		{
+			return EightBall("Are you going to ask me a question?");
+		}
+
+		// !8ball Do you like squirrels? -> asks the Magic 8 Ball (tm) if it likes squirrels.
+		[Command("8ball")]
+		[Summary("Asks the magic 8 ball a question.")]
+		public Task EightBall([Remainder] [Summary("A question.")] string question)
+		{
+			if (string.IsNullOrWhiteSpace(question))
+				question = "Are you going to ask me a question?";
+			if (question.EndsWith(".") || question.EndsWith("!"))
+				question = question.Substring(0, question.Length - 1);
+			if (!question.EndsWith("?"))
+				question += "?";
+			return ReplyAsync($"{question} {EightBallAnswers.Data.PickRandom()}");
 		}
 	}
 }
