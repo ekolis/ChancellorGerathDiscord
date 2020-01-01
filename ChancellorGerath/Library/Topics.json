@@ -90,7 +90,7 @@
 
 	// fan projects
 	"star legacy": "a game originally intended as an SE4 clone with features from SE5, but then it turned into something resembling Stars!, but with blackjack, and hookers, and the kitchen sink, and... screw this, I'm starting over. I'll make it open source and call it FrEee!",
-	"freee": "an open-source clone of SE4 being developed by Combat Wombat and ekolis. After a long hiatus, it's back in action! https://bitbucket.org/ekolis/freee",
+	"freee": "an open-source clone of SE4 being developed by Combat Wombat and ekolis. After a long hiatus, it's back in action! https://github.com/ekolis/FrEee",
 	"eh": "Event Horizon - go ahead, ask me more on that. Or, what Canadians say at the end of every sentence. But I guess you knew that part already...",
 	"event horizon": "a simple \"4X-lite\" created by Suicide Junkie. Gather resources on a looping hex map and build ships to attack the enemy mothership. Your mothership is your only means of construction, so defend it well!",
 	"vectac": "Vector Tactics. Go on, ask me more!",
@@ -99,7 +99,7 @@
 	"thancs": "Tactical Hex And Newtonian Combat Simulator. SJ's followup to Vector Tactics, this is a more detailed starship combat simulator. You now issue commands with keyboard and mouse, and you can design and build your own ships!",
 	"autohost": "a program you can use to automatically process turns for PBW games in the background. http://imagemodserver.duckdns.org/other/MM/Autohost-IIIexe.rar",
 	"autoclient": "a program you can use to automatically download and launch turns for PBW games. https://github.com/se5a/PBWAutoClient",
-	"autopbw": "a program which combines the functionality of both the autohost and the autoclient, allowing you to both host and play games without manually downloading and uploading files. https://bitbucket.org/ekolis/autopbw",
+	"autopbw": "a program which combines the functionality of both the autohost and the autoclient, allowing you to both host and play games without manually downloading and uploading files. https://github.com/ekolis/autopbw",
 	"pbc": "Suicide Junkie's Play by Committee games, in which a team of players each role-played a single governor or officer in an ostensibly single player game of SE4.",
 
 	// buzzwords
