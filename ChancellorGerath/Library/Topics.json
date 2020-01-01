@@ -100,6 +100,7 @@
 	"autohost": "a program you can use to automatically process turns for PBW games in the background. http://imagemodserver.duckdns.org/other/MM/Autohost-IIIexe.rar",
 	"autoclient": "a program you can use to automatically download and launch turns for PBW games. https://github.com/se5a/PBWAutoClient",
 	"autopbw": "a program which combines the functionality of both the autohost and the autoclient, allowing you to both host and play games without manually downloading and uploading files. https://bitbucket.org/ekolis/autopbw",
+	"pbc": "Suicide Junkie's Play by Committee games, in which a team of players each role-played a single governor or officer in an ostensibly single player game of SE4.",
 
 	// buzzwords
 	"eorging": "aggressively colonizing unclaimed planets in your ally's space to gain an economic advantage. May or may not be followed by a sudden backstab.",
