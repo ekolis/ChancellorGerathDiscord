@@ -185,12 +185,14 @@ namespace ChancellorGerath.Verbs
 		[Summary("Asks the magic 8 ball a question.")]
 		public Task EightBall([Remainder] [Summary("A question.")] string question)
 		{
+			question = question.Trim();
 			if (string.IsNullOrWhiteSpace(question))
 				question = "Are you going to ask me a question?";
 			if (question.EndsWith(".") || question.EndsWith("!"))
 				question = question.Substring(0, question.Length - 1);
 			if (!question.EndsWith("?"))
 				question += "?";
+			question = question.Capitalize();
 			return ReplyAsync($"{question} {EightBallAnswers.Data.PickRandom()}");
 		}
 	}

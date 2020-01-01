@@ -93,5 +93,19 @@ namespace ChancellorGerath
 			}
 			return idx == needle.Count();
 		}
+
+		/// <summary>
+		/// Capitalizes the first letter of a string, if it starts with a letter.
+		/// </summary>
+		/// <param name="s"></param>
+		/// <returns></returns>
+		public static string Capitalize(this string s)
+		{
+			if (s is null)
+				return null;
+			if (s == "")
+				return "";
+			return s[0].ToString().ToUpper() + s.Substring(1);
+		}
 	}
 }
