@@ -136,7 +136,7 @@
 	"SJ": [ "If it ain't leaky, I don't want it.", "What madman would build a *game* in *Perl*?!" ],
 	"spam": [ "I like my spam with spam, spam, eggs, and spam." ],
 	"spy": [ "We have discovered your pathetic spies and executed them. We consider your spying an act of war." ],
-	"SQL": [ "I wanted a sequel to SE4 and look what I got...", "LINQ! He come to town! He come to save your precious data!", "Mineral planets are the' or 1=1; drop table empire;"],
+	"SQL": [ "I wanted a sequel to SE4 and look what I got...", "LINQ! He come to town! He come to save your precious data!", "Mineral planets are the' or 1=1; drop table empire;", "`update planet set mineralValue = 999 where owner = 'phong'`"],
 	"squirrel": [ "Did someone say squirrel?!? 🐿️🐿️🐿️", "chchchchchchchchch", "Making squirrel sounds is therapeutic. Trust me, my therapist said so.", "Oh, Princess Sally...", "Oh, Sandy..." ],
 	"starfury": [ "I wanna pilot a starship too!", "What did SJ do to my poor meson blasters!" ],
 	"stellar warfare": [ "*starts humming the Imperial March*" ],
