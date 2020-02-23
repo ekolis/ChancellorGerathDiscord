@@ -22,6 +22,14 @@ namespace ChancellorGerath.Verbs
 		{
 			try
 			{
+				dice = dice.ToLower();
+
+				// some special cases
+				if (dice == "tide")
+					return ReplyAsync(new string[] { "I'm my own grandpa!", "Incest planets are the best (for increasing reproduction)!" }.PickRandom());
+				if (dice == "out")
+					return ReplyAsync("Go go gadget tanks!");
+
 				var regex = new Regex(@"([-+]?[0-9]*)d([-]?[0-9]*)(.?)(\d*)");
 				var match = regex.Match(dice);
 
