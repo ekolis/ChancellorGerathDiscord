@@ -22,9 +22,6 @@ namespace ChancellorGerath
 			// Hook the MessageReceived event into our command handler
 			_client.MessageReceived += HandleCommandAsync;
 
-			// Hook up our chitchat listener
-			_client.MessageReceived += ConversationModule.MarkovListenAsync;
-
 			// Here we discover all of the command modules in the entry
 			// assembly and load them. Starting from Discord.NET 2.0, a
 			// service provider is required to be passed into the
@@ -53,6 +50,7 @@ namespace ChancellorGerath
 				message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
 			{
 				await new Spam().TryToReplyAsync(message, context);
+				await ConversationModule.MarkovListenAsync(messageParam, context.Guild.Name);
 			}
 			else
 			{
