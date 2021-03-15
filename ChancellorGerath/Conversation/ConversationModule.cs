@@ -89,7 +89,7 @@ namespace ChancellorGerath.Conversation
 				Generators.Add(who, CreateMarkovGenerator(who));
 			gen = Generators[who];
 
-			if (!gen.Lexicon.Any())
+			if (!gen.Lexicon.Any() || !IsUserKnownInCurrentServer(who))
 				return ReplyAsync($"I don't have any conversation history for {who}!");
 
 			var preferredLength = Extensions.Random.Next(8, 32);
@@ -132,7 +132,7 @@ namespace ChancellorGerath.Conversation
 		public Task QuoteAsync([Remainder][Summary("Who to quote")] string who)
 		{
 			var quotes = Posts.Data.Where(q => q.IsQuoted && q.User == who);
-			if (quotes.Any())
+			if (quotes.Any() && IsUserKnownInCurrentServer(who))
 			{
 				return ReplyAsync(quotes.PickRandom().Content);
 			}
@@ -311,5 +311,15 @@ namespace ChancellorGerath.Conversation
 		private const string LegacyServer = "Space Empires";
 
 		private const string UnknownChannel = "(unknown)";
+
+		/// <summary>
+		/// Has the user posted to our knowledge in the current server?
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		private bool IsUserKnownInCurrentServer(string user)
+		{
+			return Posts.Data.Any(q => q.User == user && q.Server == Context.Guild.Name);
+		}
 	}
 }
