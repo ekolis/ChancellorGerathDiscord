@@ -3,22 +3,63 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.IO;
-using System.Reflection;
+using System.ServiceProcess;
 using System.Threading.Tasks;
 
 namespace ChancellorGerath
 {
 	public static class Program
-	{ 
+	{
 		public static string Title => "Chancellor Gerath";
+
+		#region Nested classes to support running as service
+		// https://stackoverflow.com/questions/7764088/net-console-application-as-windows-service
+		public const string ServiceName = "MyService";
+
+		public class Service : ServiceBase
+		{
+			public Service()
+			{
+				ServiceName = Program.ServiceName;
+			}
+
+			protected override void OnStart(string[] args)
+			{
+				Task.Run(async () => StartAsync());
+			}
+
+			protected override void OnStop()
+			{
+				Program.Stop();
+			}
+		}
+		#endregion
 
 		private static DiscordSocketClient client;
 
 		public static async Task Main()
 		{
-			Console.Title = Title;
-			ConsoleWindow.Hide();
+			if (!Environment.UserInteractive)
+			{
+				// running as service
+				using Service service = new();
+				ServiceBase.Run(service);
+			}
+			else
+			{
+				// running as a console app
+				Console.Title = Title;
+				ConsoleWindow.Hide();
 
+				await StartAsync();
+
+				// Block this task until the program is closed.
+				await Task.Delay(-1);
+			}
+		}
+
+		private static async Task StartAsync()
+		{
 			var stdout = new StreamWriter(File.OpenWrite("stdout.txt"));
 			stdout.AutoFlush = true;
 			var stderr = new StreamWriter(File.OpenWrite("stderr.txt"));
@@ -39,10 +80,14 @@ namespace ChancellorGerath
 			var token = File.ReadAllText("Token.txt");
 			await client.LoginAsync(TokenType.Bot, token);
 			await client.StartAsync();
-
-			// Block this task until the program is closed.
-			await Task.Delay(-1);
 		}
+
+		private static void Stop()
+		{
+
+		}
+
+
 
 		private static Task Log(LogMessage msg)
 		{
