@@ -3,7 +3,9 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.IO;
+using System.Reflection;
 using System.ServiceProcess;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChancellorGerath
@@ -25,7 +27,8 @@ namespace ChancellorGerath
 
 			protected override void OnStart(string[] args)
 			{
-				Task.Run(async () => StartAsync());
+				//Thread.Sleep(10000); // XXX time to attach debugger
+				Task.Run(async () => await StartAsync());
 			}
 
 			protected override void OnStop()
@@ -60,9 +63,14 @@ namespace ChancellorGerath
 
 		private static async Task StartAsync()
 		{
-			var stdout = new StreamWriter(File.OpenWrite("stdout.txt"));
+			// change working directory to the location of the executable so we can find our files
+			var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			Directory.SetCurrentDirectory(exeDir);
+
+			// set up logging
+			var stdout = new StreamWriter(File.OpenWrite(Path.Combine(exeDir, "stdout.txt")));
 			stdout.AutoFlush = true;
-			var stderr = new StreamWriter(File.OpenWrite("stderr.txt"));
+			var stderr = new StreamWriter(File.OpenWrite(Path.Combine(exeDir, "stderr.txt")));
 			stderr.AutoFlush = true;
 			Console.SetOut(stdout);
 			Console.SetError(stderr);
