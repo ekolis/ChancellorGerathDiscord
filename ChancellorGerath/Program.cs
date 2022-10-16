@@ -8,16 +8,13 @@ using System.Threading.Tasks;
 
 namespace ChancellorGerath
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		=> new Program().MainAsync().GetAwaiter().GetResult();
-
+	public static class Program
+	{ 
 		public static string Title => "Chancellor Gerath";
 
-		private DiscordSocketClient client;
+		private static DiscordSocketClient client;
 
-		public async Task MainAsync()
+		public static async Task Main()
 		{
 			Console.Title = Title;
 			ConsoleWindow.Hide();
@@ -47,7 +44,7 @@ namespace ChancellorGerath
 			await Task.Delay(-1);
 		}
 
-		private Task Log(LogMessage msg)
+		private static Task Log(LogMessage msg)
 		{
 			Console.WriteLine(msg.ToString());
 			return Task.CompletedTask;

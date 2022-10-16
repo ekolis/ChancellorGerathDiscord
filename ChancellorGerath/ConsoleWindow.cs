@@ -7,21 +7,24 @@ namespace ChancellorGerath
 {
 	public static class ConsoleWindow
 	{
-		[DllImport("user32.dll")]
-		private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+		[DllImport("kernel32.dll")]
+		static extern IntPtr GetConsoleWindow();
 
 		[DllImport("user32.dll")]
-		private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-		private static IntPtr hWnd = FindWindow(null, Program.Title);
+		const int SW_HIDE = 0;
+		const int SW_SHOW = 5;
+
+		private static IntPtr hWnd = GetConsoleWindow();
 
 		public static void Show()
 		{
-			ShowWindow(hWnd, 1);
+			ShowWindow(hWnd, SW_SHOW);
 		}
 		public static void Hide()
 		{
-			ShowWindow(hWnd, 0);
+			ShowWindow(hWnd, SW_HIDE);
 		}
 	}
 }
