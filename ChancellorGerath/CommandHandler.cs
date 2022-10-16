@@ -49,8 +49,14 @@ namespace ChancellorGerath
 			if (!(message.HasCharPrefix('!', ref argPos) ||
 				message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
 			{
+				// try to reply to the message
 				await new Spam().TryToReplyAsync(message, context);
-				await ConversationModule.MarkovListenAsync(messageParam, context.Guild.Name);
+
+				// if we are in a server (not a private message), have the Markov chains learn from this message
+				if (context.Guild is not null)
+				{
+					await ConversationModule.MarkovListenAsync(messageParam, context.Guild.Name);
+				}
 			}
 			else
 			{
